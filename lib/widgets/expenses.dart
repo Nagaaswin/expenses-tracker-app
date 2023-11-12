@@ -1,8 +1,7 @@
-import 'package:expenses_tracker_app/enum/category.dart';
-import 'package:expenses_tracker_app/expense_list.dart';
+import 'package:expenses_tracker_app/widgets/expenses_list/expense_list.dart';
 import 'package:flutter/material.dart';
-
-import 'model/expense.dart';
+import '../enums/category.dart';
+import '../models/expense.dart';
 
 class Expenses extends StatefulWidget {
   const Expenses({super.key});
@@ -26,6 +25,7 @@ class _ExpensesState extends State<Expenses> {
         date: DateTime.now(),
         category: Category.leisure)
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
