@@ -11,6 +11,7 @@ class NewExpense extends StatefulWidget {
 
 class _NewExpenseState extends State<NewExpense> {
   final _titleController = TextEditingController();
+  final _expenseAmountController = TextEditingController();
 
   @override
   void dispose() {
@@ -30,13 +31,29 @@ class _NewExpenseState extends State<NewExpense> {
             keyboardType: TextInputType.text,
             decoration: const InputDecoration(label: Text('Title')),
           ),
+          TextField(
+            controller: _expenseAmountController,
+            maxLength: 10,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            decoration: const InputDecoration(label: Text('Amount')),
+          ),
           Row(
             children: [
               ElevatedButton(
                 onPressed: () {
                   print(_titleController.text);
+                  print(_expenseAmountController.text);
                 },
                 child: const Text('Save Expenses'),
+              ),
+              const Spacer(),
+              ElevatedButton(
+                style:
+                    ElevatedButton.styleFrom(foregroundColor: Colors.redAccent),
+                onPressed: () {
+                  print('Closing modal');
+                },
+                child: const Text('Cancel'),
               )
             ],
           )
