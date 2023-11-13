@@ -16,6 +16,7 @@ class _NewExpenseState extends State<NewExpense> {
   @override
   void dispose() {
     _titleController.dispose();
+    _expenseAmountController.dispose();
     super.dispose();
   }
 
@@ -31,14 +32,44 @@ class _NewExpenseState extends State<NewExpense> {
             keyboardType: TextInputType.text,
             decoration: const InputDecoration(label: Text('Title')),
           ),
-          TextField(
-            controller: _expenseAmountController,
-            maxLength: 10,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: const InputDecoration(label: Text('Amount')),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _expenseAmountController,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                      prefixText: '\$ ', label: Text('Amount')),
+                ),
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("Selected Date"),
+                    IconButton(
+                        onPressed: _presentDatePicker,
+                        icon: const Icon(Icons.calendar_month))
+                  ],
+                ),
+              )
+            ],
           ),
           Row(
             children: [
+              TextButton(
+                style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel'),
+              ),
+              const Spacer(),
               ElevatedButton(
                 onPressed: () {
                   print(_titleController.text);
@@ -46,19 +77,17 @@ class _NewExpenseState extends State<NewExpense> {
                 },
                 child: const Text('Save Expenses'),
               ),
-              const Spacer(),
-              ElevatedButton(
-                style:
-                    ElevatedButton.styleFrom(foregroundColor: Colors.redAccent),
-                onPressed: () {
-                  print('Closing modal');
-                },
-                child: const Text('Cancel'),
-              )
             ],
           )
         ],
       ),
     );
+  }
+
+  void _presentDatePicker() {
+    final now = DateTime.now();
+    final lastDate = DateTime(now.year - 1, now.month, now.day);
+    showDatePicker(
+        context: context, initialDate: now, firstDate: lastDate, lastDate: now);
   }
 }
