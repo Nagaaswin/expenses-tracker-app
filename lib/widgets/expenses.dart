@@ -1,3 +1,4 @@
+import 'package:expenses_tracker_app/enums/category.dart';
 import 'package:expenses_tracker_app/widgets/expenses_list/expense_list.dart';
 import 'package:expenses_tracker_app/widgets/new_expense.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,13 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
-  final List<Expense> _registeredExpenses = [];
+  final List<Expense> _registeredExpenses = [
+    Expense(
+        title: 'sample',
+        amount: 20.4,
+        date: DateTime.now(),
+        category: Category.work)
+  ];
 
   void _addExpense(Expense expense) {
     setState(() {
