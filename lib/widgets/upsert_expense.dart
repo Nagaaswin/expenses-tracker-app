@@ -2,23 +2,35 @@ import 'package:expenses_tracker_app/enums/category.dart';
 import 'package:expenses_tracker_app/models/expense.dart';
 import 'package:flutter/material.dart';
 
-class NewExpense extends StatefulWidget {
-  const NewExpense({super.key, required this.addExpense});
+class UpsertExpense extends StatefulWidget {
+  const UpsertExpense({super.key, required this.upsertExpense, this.expense});
 
-  final void Function(Expense expense) addExpense;
+  final void Function(Expense expense) upsertExpense;
+  final Expense? expense;
 
   @override
-  State<NewExpense> createState() {
-    return _NewExpenseState();
+  State<UpsertExpense> createState() {
+    return _UpsertExpenseState();
   }
 }
 
-class _NewExpenseState extends State<NewExpense> {
+class _UpsertExpenseState extends State<UpsertExpense> {
   final _titleController = TextEditingController();
   final _expenseAmountController = TextEditingController();
   DateTime? _selectedDate;
-
   Category _selectedCategory = Category.leisure;
+
+  @override
+  void initState() {
+    Expense? expense = widget.expense;
+    if (null != expense) {
+      _titleController.text = expense.title;
+      _expenseAmountController.text = expense.amount.toString();
+      _selectedDate = expense.date;
+      _selectedCategory = expense.category;
+    }
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -117,11 +129,13 @@ class _NewExpenseState extends State<NewExpense> {
   }
 
   void _presentDatePicker() async {
+    final initialDate =
+        widget.expense == null ? DateTime.now() : widget.expense!.date;
     final now = DateTime.now();
     final firstDate = DateTime(now.year - 1, now.month, now.day);
     final pickedDate = await showDatePicker(
         context: context,
-        initialDate: now,
+        initialDate: initialDate,
         firstDate: firstDate,
         lastDate: now);
     setState(() {
@@ -130,6 +144,7 @@ class _NewExpenseState extends State<NewExpense> {
   }
 
   void _submitExpenseData() {
+    Expense? expense = widget.expense;
     final enteredAmount = double.tryParse(_expenseAmountController.text);
     final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
     if (_titleController.text.trim().isEmpty ||
@@ -153,11 +168,19 @@ class _NewExpenseState extends State<NewExpense> {
       );
       return;
     }
-    widget.addExpense(Expense(
-        title: _titleController.text,
-        amount: enteredAmount,
-        date: _selectedDate!,
-        category: _selectedCategory));
+    if (expense != null) {
+      expense.title = _titleController.text;
+      expense.amount = enteredAmount;
+      expense.date = _selectedDate!;
+      expense.category = _selectedCategory;
+    } else {
+      expense = Expense(
+          title: _titleController.text,
+          amount: enteredAmount,
+          date: _selectedDate!,
+          category: _selectedCategory);
+    }
+    widget.upsertExpense(expense);
     Navigator.pop(context);
   }
 }

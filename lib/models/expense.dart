@@ -14,11 +14,11 @@ class Expense {
       required this.date,
       required this.category})
       : id = uuid.v4(); // constructor initializer
-  final String id;
-  final String title;
-  final double amount;
-  final DateTime date;
-  final Category category;
+  String id;
+  String title;
+  double amount;
+  DateTime date;
+  Category category;
 
   String get formattedDate {
     return formatter.format(date);

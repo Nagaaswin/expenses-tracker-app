@@ -4,7 +4,12 @@ import '../../icons/expense_icons.dart';
 import '../../models/expense.dart';
 
 class ExpenseItem extends StatelessWidget {
-  const ExpenseItem({required this.expense, super.key});
+  const ExpenseItem({
+    required this.expense,
+    super.key,
+    required this.upsertExpenseOverlay,
+  });
+  final void Function(Expense expense) upsertExpenseOverlay;
 
   final Expense expense;
 
@@ -12,7 +17,9 @@ class ExpenseItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap: (){},
+        onTap: () {
+          upsertExpenseOverlay(expense);
+        },
         child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 20,

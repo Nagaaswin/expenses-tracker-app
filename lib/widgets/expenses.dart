@@ -1,7 +1,7 @@
 import 'package:expenses_tracker_app/enums/category.dart';
 import 'package:expenses_tracker_app/widgets/chart/chart.dart';
 import 'package:expenses_tracker_app/widgets/expenses_list/expense_list.dart';
-import 'package:expenses_tracker_app/widgets/new_expense.dart';
+import 'package:expenses_tracker_app/widgets/upsert_expense.dart';
 import 'package:flutter/material.dart';
 
 import '../models/expense.dart';
@@ -24,9 +24,11 @@ class _ExpensesState extends State<Expenses> {
         category: Category.work)
   ];
 
-  void _addExpense(Expense expense) {
+  void _upsertExpense(Expense expense) {
     setState(() {
-      _registeredExpenses.add(expense);
+      if (!_registeredExpenses.contains(expense)) {
+        _registeredExpenses.add(expense);
+      }
     });
   }
 
@@ -51,11 +53,12 @@ class _ExpensesState extends State<Expenses> {
     );
   }
 
-  void _openAddExpenseOverlay() {
+  void openUpsertExpenseOverlay(Expense? expense) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
-      builder: (ctx) => NewExpense(addExpense: _addExpense),
+      builder: (ctx) =>
+          UpsertExpense(upsertExpense: _upsertExpense, expense: expense),
     );
   }
 
@@ -66,16 +69,18 @@ class _ExpensesState extends State<Expenses> {
     );
     if (_registeredExpenses.isNotEmpty) {
       contentToBeDisplayed = ExpensesList(
-        expenses: _registeredExpenses,
-        removeExpense: _removeExpense,
-      );
+          expenses: _registeredExpenses,
+          removeExpense: _removeExpense,
+          upsertExpenseOverlay: openUpsertExpenseOverlay);
     }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expense Tracker'),
         actions: [
           IconButton(
-            onPressed: _openAddExpenseOverlay,
+            onPressed: () {
+              openUpsertExpenseOverlay(null);
+            },
             icon: const Icon(Icons.add),
           ),
         ],

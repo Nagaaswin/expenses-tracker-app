@@ -8,10 +8,12 @@ class ExpensesList extends StatelessWidget {
     super.key,
     required this.expenses,
     required this.removeExpense,
+    required this.upsertExpenseOverlay,
   });
 
   final List<Expense> expenses;
   final void Function(Expense expense) removeExpense;
+  final void Function(Expense expense) upsertExpenseOverlay;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -29,6 +31,7 @@ class ExpensesList extends StatelessWidget {
         },
         child: ExpenseItem(
           expense: expenses[index],
+          upsertExpenseOverlay: upsertExpenseOverlay,
         ),
       ),
     );
