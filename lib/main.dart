@@ -1,5 +1,6 @@
 import 'package:expenses_tracker_app/widgets/expenses.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 ColorScheme kColorScheme = ColorScheme.fromSeed(seedColor: Colors.purple);
 ColorScheme kDarkColorScheme =
@@ -8,24 +9,27 @@ ColorScheme kDarkColorScheme =
 void main() {
   var lightThemeColoring = ThemeColoring(kColorScheme);
   var darkThemeColoring = ThemeColoring(kDarkColorScheme);
-  runApp(
-    MaterialApp(
-      darkTheme: ThemeData.dark().copyWith(
-        useMaterial3: true,
-        colorScheme: kDarkColorScheme,
-        appBarTheme: darkThemeColoring.getAppBarTheme(),
-        cardTheme: darkThemeColoring.getCardTheme(),
-        elevatedButtonTheme: darkThemeColoring.getElevatedButtonTheme(),
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
+    (fn) => runApp(
+      MaterialApp(
+        darkTheme: ThemeData.dark().copyWith(
+          useMaterial3: true,
+          colorScheme: kDarkColorScheme,
+          appBarTheme: darkThemeColoring.getAppBarTheme(),
+          cardTheme: darkThemeColoring.getCardTheme(),
+          elevatedButtonTheme: darkThemeColoring.getElevatedButtonTheme(),
+        ),
+        theme: ThemeData().copyWith(
+          useMaterial3: true,
+          colorScheme: kColorScheme,
+          appBarTheme: lightThemeColoring.getAppBarTheme(),
+          cardTheme: lightThemeColoring.getCardTheme(),
+          elevatedButtonTheme: lightThemeColoring.getElevatedButtonTheme(),
+          textTheme: lightThemeColoring.getTextTheme(),
+        ),
+        home: const Expenses(),
       ),
-      theme: ThemeData().copyWith(
-        useMaterial3: true,
-        colorScheme: kColorScheme,
-        appBarTheme: lightThemeColoring.getAppBarTheme(),
-        cardTheme: lightThemeColoring.getCardTheme(),
-        elevatedButtonTheme: lightThemeColoring.getElevatedButtonTheme(),
-        textTheme: lightThemeColoring.getTextTheme(),
-      ),
-      home: const Expenses(),
     ),
   );
 }
