@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:expenses_tracker_app/enums/category.dart';
 import 'package:expenses_tracker_app/models/expense.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class UpsertExpense extends StatefulWidget {
@@ -157,22 +160,7 @@ class _UpsertExpenseState extends State<UpsertExpense> {
     if (_titleController.text.trim().isEmpty ||
         amountIsInvalid ||
         _selectedDate == null) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Invalid Input'),
-          content: const Text(
-              'Please make sure a valid title, amount, date and category was entered.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("Okay"),
-            )
-          ],
-        ),
-      );
+      _showDialog();
       return;
     }
     if (expense != null) {
@@ -189,5 +177,43 @@ class _UpsertExpenseState extends State<UpsertExpense> {
     }
     widget.upsertExpense(expense);
     Navigator.pop(context);
+  }
+
+  _showDialog() {
+    if (Platform.isIOS) {
+      showCupertinoDialog(
+        context: context,
+        builder: (ctx) => CupertinoAlertDialog(
+          title: const Text('Invalid Input'),
+          content: const Text(
+              'Please make sure a valid title, amount, date and category was entered.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Okay"),
+            )
+          ],
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Invalid Input'),
+          content: const Text(
+              'Please make sure a valid title, amount, date and category was entered.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Okay"),
+            )
+          ],
+        ),
+      );
+    }
   }
 }
